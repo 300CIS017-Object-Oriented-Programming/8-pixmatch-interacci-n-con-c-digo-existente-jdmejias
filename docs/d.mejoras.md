@@ -111,6 +111,8 @@ Detalla en este markdown lo siguiente:
     - docs/
         - ( documentación )
         - ...
+    - funcional
+        - (se van a encontrar los archivos funcionales como el json.)
     - main/
         - jugador.py
         - leaderboard.py
