@@ -45,3 +45,86 @@ Detalla en este markdown lo siguiente:
 - **Métodos Importantes:** Enumera los métodos principales para cada clase. Incluye una descripción de cuál sería la utilidad de cada método
 - **Imagen del UML del diagrama de clases**  Adjunta una imagen del UML del diagrama de clases como una forma visual de planificar y entender la estructura de las clases, métodos, atributos y relaciones que podría tener una versión mejorada del código fuente.
 - **Organización de archivos:** Propon una estructura de organización de los archivos de este proyecto para que no queden todos en la raiz principal. Investiga cuáles podrían ser buenas formas de organizar los directorios y a partir de tu investigación indica qué directorios crearías y cómo los organizarías. 
+
+## Clases
+
+### Jugador
+- **Propósito:** la idea es representar a una persona que va a jugar el juego.
+- **Justificación:** Agrupa los datos relacionados con un jugador, como su nombre, pais, y puntaje(score).
+
+### Tablero
+- **Propósito:** el objetivo es representar un tablero del  juego.
+- **Justificación:** puede tener como una vector que contenga emoji, la idea es que cada tablero tiene sus propios emojis, tambien sirve para iniciar un juego, verificar estado, gesitonar interacciones.
+
+### Juego
+- **Propósito:** sirve para gestionar un juego
+- **Justificación:** la idea es que cada juego tenga un nivel de dificultad, que un juego contenga un tablero, ya que se debe seleccionar aleatoriamente. 
+### Clase Leaderboard
+- **Propósito:** Representar la tabla de clasificación del juego.
+- **Justificación:** Permite mantener un registro de los puntajes de los jugadores, seria mas facil mostrar la informacion y ser mas ordenado.
+
+### Clase View
+- **Propósito:** Representar la interfaz de usuario del juego.
+- **Justificación:** el objetivo que esta clase sea la interaccion con el main, es decir la relacion de la clase view y el jugador, desde aqui va a poder jugar.
+
+## Métodos Importantes
+
+### Clase Jugador
+
+- obtener_nombre(): nos da el nombre del jugador.
+- obtener_puntaje(): obtenemos el puntaje del jugador.
+- incrementar_puntaje(puntos): incrementa el puntaje del jugador.
+- obtener_nivel(): retorna el nivel que selecciono el jugador
+
+### Clase Tablero
+
+- inicializar_tablero(): inicializa el tablero 
+- obtener_estado_casilla(...): retorna el estado de una casilla.
+- actualizar_estado_casilla(...): actualiza el estado de una casilla.
+
+### Clase Juego
+
+- iniciar_juego(): inicia una nueva partida.
+- realizar_jugada(...): realiza la jugada del jugador.
+- verificar_fin_juego(): verifica si se ha alcanzado el final del juego.
+- mostrar_estado_juego(): muestra el estado actual del juego en el tablero.
+- agregar_tablero: añade un tablero al juego
+### Clase Leaderboard
+
+- agregar_puntaje(...): agrega el puntaje de un jugador.
+- obtener_puntajes(): retorna los puntajes de todos los jugadores.
+
+### Clase View
+
+- mostrar_tablero(...): muestra el estado actual del tablero.
+- mostrar_mensaje(...): muestra un mensaje en la interfaz de usuario.
+- solicitar_jugada(): solicita al usuario que realice una jugada y retorna las coordenadas ingresadas.
+- mostrar_tabla_clasificacion(...): muestra la tabla de clasificación en la interfaz de usuario.
+-jugar(...): juega
+## Imagen del UML del diagrama de clases
+
+![diagrama](img/diagrama.png)
+
+## Organización de archivos
+
+- source/
+    - docs/
+        - ( documentación )
+        - ...
+    - funcional
+        - (se van a encontrar los archivos funcionales como el json.)
+    - main/
+        - jugador.py
+        - leaderboard.py
+        - tablero.py
+        - juego.py
+    - view/
+        - view.py
+        - main.py
+    - img/
+        - (archivos de recursos gráficos)
+        - ...
+    - venv/
+        - (archivos del entorno virtual)
+        - ...
+- requirements.txt
