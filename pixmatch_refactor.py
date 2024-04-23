@@ -97,11 +97,9 @@ def leaderboard(what_to_do):
 
                 leaderboard[str(leaderboard_dict_lngth + 1)] = {'NameCountry': mystate.GameDetails[3],
                                                                 'HighestScore': mystate.myscore}
-                leaderboard = dict(
-                    sorted(leaderboard.items(), key=lambda item: item[1]['HighestScore'], reverse=True))  # sort desc
-
-                if len(leaderboard) > 3:
-                    for i in range(len(leaderboard) - 3): leaderboard.popitem()  # rmv last kdict ey
+                leaderboard = dict(sorted(leaderboard.items(), key=lambda item: item[1]['HighestScore'], reverse=True))  # sort desc
+                if len(leaderboard) > 4:
+                    for i in range(len(leaderboard) - 4): leaderboard.popitem()  # rmv last kdict ey
 
                 json.dump(leaderboard, open(locate_current_folder + 'leaderboard.json', 'w'))  # write file
 
@@ -109,25 +107,23 @@ def leaderboard(what_to_do):
         if mystate.GameDetails[3] != '':  # record in leaderboard only if player name is provided
             if os.path.isfile(locate_current_folder + 'leaderboard.json'):
                 leaderboard = json.load(open(locate_current_folder + 'leaderboard.json'))  # read file
+                leaderboard = dict(sorted(leaderboard.items(), key=lambda item: item[1]['HighestScore'], reverse=True))  # sort desc
 
-                leaderboard = dict(
-                    sorted(leaderboard.items(), key=lambda item: item[1]['HighestScore'], reverse=True))  # sort desc
-
-                sc0, sc1, sc2, sc3 = st.columns((2, 3, 3, 3))
+                sc0, sc1, sc2, sc3, column_four = st.columns((2, 3, 3, 3, 3))
                 rknt = 0
                 for vkey in leaderboard.keys():
                     if leaderboard[vkey]['NameCountry'] != '':
                         rknt += 1
                         if rknt == 1:
                             sc0.write('🏆 Past Winners:')
-                            sc1.write(
-                                f"🥇 | {leaderboard[vkey]['NameCountry']}: :red[{leaderboard[vkey]['HighestScore']}]")
+                            sc1.write(f"🥇 | {leaderboard[vkey]['NameCountry']}: :red[{leaderboard[vkey]['HighestScore']}]")
                         elif rknt == 2:
-                            sc2.write(
-                                f"🥈 | {leaderboard[vkey]['NameCountry']}: :red[{leaderboard[vkey]['HighestScore']}]")
+                            sc2.write(f"🥈 | {leaderboard[vkey]['NameCountry']}: :red[{leaderboard[vkey]['HighestScore']}]")
                         elif rknt == 3:
-                            sc3.write(
-                                f"🥈 | {leaderboard[vkey]['NameCountry']}: :red[{leaderboard[vkey]['HighestScore']}]")
+                            sc3.write(f"🥉 | {leaderboard[vkey]['NameCountry']}: :red[{leaderboard[vkey]['HighestScore']}]")
+                        elif rknt == 4:
+                            #aladir una columna más para el cuarto jugador
+                            column_four.write(f"🏅 | {leaderboard[vkey]['NameCountry']}: :red[{leaderboard[vkey]['HighestScore']}]")
 
 
 def initial_page():
@@ -322,6 +318,7 @@ def new_game():
     # Funcion para iniciar un nuevo juego y mostrar la interfaz
     reset_board()
     total_cells_per_row_or_col = mystate.GameDetails[2]
+    max_errors = (total_cells_per_row_or_col ** 2) // 2 + 1  # Calcular el número máximo de errores permitidos
 
     reduce_gap_from_page_top('sidebar')
     with st.sidebar:
@@ -348,6 +345,8 @@ def new_game():
     # Set Board Dafaults
     st.markdown("<style> div[class^='css-1vbkxwb'] > p { font-size: 1.5rem; } </style> ",
                 unsafe_allow_html=True)  # make button face big
+
+    errors = 0  #inicializar en 0
 
     for i in range(1, (total_cells_per_row_or_col + 1)):
         tlst = ([1] * total_cells_per_row_or_col) + [2]  # 2 = rt side padding
@@ -401,7 +400,7 @@ def new_game():
 
             elif mystate.plyrbtns[vcell]['isTrueFalse'] == False:
                 globals()['cols' + arr_ref][vcell - mval].markdown(pressed_emoji.replace('|fill_variable|', '❌'), True)
-
+                errors += 1
         else:
             vemoji = mystate.plyrbtns[vcell]['eMoji']
             globals()['cols' + arr_ref][vcell - mval].button(vemoji, on_click=pressed_check, args=(vcell,),
@@ -410,14 +409,12 @@ def new_game():
     st.caption('')  # vertical filler
     st.markdown(horizontal_line, True)
 
-    if len(mystate.expired_cells) == (total_cells_per_row_or_col ** 2):
+    if len(mystate.expired_cells) == (total_cells_per_row_or_col ** 2) or errors >= max_errors:  # Verificar si el usuario ha perdido):
         leaderboard('write')
-
-        if mystate.myscore > 0:
+        if mystate.myscore > 0 and errors < max_errors:
             st.balloons()
-        elif mystate.myscore <= 0:
+        elif mystate.myscore <= 0 or errors >= max_errors:
             st.snow()
-
         tm.sleep(5)
         mystate.runpage = main
         st.rerun()

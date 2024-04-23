@@ -84,13 +84,13 @@ def Leaderboard(what_to_do):
                 json.dump(leaderboard, open(vpth + 'leaderboard.json', 'w'))     # write file
 
     elif what_to_do == 'read':
-        if mystate.GameDetails[3] != '':       # record in leaderboard only if player name is provided
+        if mystate.GameDetails[4] != '':       # record in leaderboard only if player name is provided
             if os.path.isfile(vpth + 'leaderboard.json'):
                 leaderboard = json.load(open(vpth + 'leaderboard.json'))    # read file
                     
                 leaderboard = dict(sorted(leaderboard.items(), key=lambda item: item[1]['HighestScore'], reverse=True))  # sort desc
 
-                sc0, sc1, sc2, sc3 = st.columns((2,3,3,3))
+                sc0, sc1, sc2, sc3, sc4 = st.columns((2,3,3,3,3))
                 rknt = 0
                 for vkey in leaderboard.keys():
                     if leaderboard[vkey]['NameCountry'] != '':
@@ -100,6 +100,7 @@ def Leaderboard(what_to_do):
                             sc1.write(f"🥇 | {leaderboard[vkey]['NameCountry']}: :red[{leaderboard[vkey]['HighestScore']}]")
                         elif rknt == 2: sc2.write(f"🥈 | {leaderboard[vkey]['NameCountry']}: :red[{leaderboard[vkey]['HighestScore']}]")
                         elif rknt == 3: sc3.write(f"🥈 | {leaderboard[vkey]['NameCountry']}: :red[{leaderboard[vkey]['HighestScore']}]")
+                        elif rknt == 4: sc4.write(f"🥈 | {leaderboard[vkey]['NameCountry']}: :red[{leaderboard[vkey]['HighestScore']}]")
 
 def InitialPage():
     with st.sidebar:
